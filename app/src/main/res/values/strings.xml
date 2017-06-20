@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Insta-randomizer</string>
+
+
+    <string name="word.loading">Loading</string>
+
+
+    <string name="screen.empty.description">You don\'t have any cards configured yet...</string>
+</resources>
