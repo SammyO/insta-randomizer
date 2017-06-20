@@ -9,14 +9,17 @@ import com.oddhov.insta_randomizer.R;
 import com.oddhov.insta_randomizer.presenters.TagItemPresenter;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class TagItemViewHolder extends RecyclerView.ViewHolder implements TagItemViewHolderView {
     @BindView(R.id.tvTagItemValue)
     TextView tvTagItemValue;
+
     private TagItemPresenter mPresenter;
 
     public TagItemViewHolder(View itemView) {
         super(itemView);
+        ButterKnife.bind(this, itemView);
     }
 
     public void bindPresenter(TagItemPresenter presenter) {

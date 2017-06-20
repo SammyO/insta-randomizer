@@ -85,6 +85,7 @@ public class OverviewAdapter extends RecyclerView.Adapter<TagItemViewHolder> {
     }
 
     private TagItemPresenter getTagItemPresenter(TagItem tagItem) {
+        Log.e("OverviewAdapter", "Getting presenter for item " + tagItem.getId());
         return mTagItemPresenters.get(tagItem.getId());
     }
 
