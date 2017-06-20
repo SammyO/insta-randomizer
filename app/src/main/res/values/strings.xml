@@ -1,9 +1,14 @@
 <resources>
     <string name="app_name">Insta-randomizer</string>
 
-
     <string name="word.loading">Loading</string>
 
+    <string name="screen.empty.description">You don\'t have any cards configured yet…</string>
 
-    <string name="screen.empty.description">You don\'t have any cards configured yet...</string>
+    <!-- Overview Activity -->
+    <string name="add_tag_item_title">Add Instragram hashtag</string>
+    <string name="add_tag_item_hint">#</string>
+    <string name="add_tag_item_save">Save</string>
+    <string name="add_tag_item_cancel">Cancel</string>
+    <string name="added_tag_item_message">Hashtag #%s added</string>
 </resources>

@@ -8,4 +8,6 @@ public interface OverviewPresenter {
     void setup(@NonNull OverviewView view);
 
     void destroy();
+
+    void onAddButtonClicked();
 }

@@ -18,7 +18,7 @@ import java.util.Map;
 public class OverviewAdapter extends RecyclerView.Adapter<TagItemViewHolder> {
     // Hold internal set of TagItems and their Presenters
     private final List<TagItem> mTagItems;
-    private final Map<Long, TagItemPresenter> mTagItemPresenters;
+    private final Map<String, TagItemPresenter> mTagItemPresenters;
 
     //region Constructor
     public OverviewAdapter() {
@@ -37,7 +37,7 @@ public class OverviewAdapter extends RecyclerView.Adapter<TagItemViewHolder> {
             mTagItemPresenters.put(tagItem.getId(), createTagItemPresenter(tagItem));
         }
 
-//        notifyDataSetChanged();
+        notifyDataSetChanged();
     }
     //endregion
 

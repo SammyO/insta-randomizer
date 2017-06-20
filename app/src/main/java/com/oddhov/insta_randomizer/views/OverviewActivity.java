@@ -1,11 +1,18 @@
 package com.oddhov.insta_randomizer.views;
 
 
+import android.app.Activity;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 import android.widget.ViewAnimator;
 
 import com.oddhov.insta_randomizer.R;
@@ -16,6 +23,10 @@ import com.oddhov.insta_randomizer.presenters.OverviewPresenterImpl;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class OverviewActivity extends AppCompatActivity implements OverviewView {
     //region Static Fields
     private static final int POSITION_LIST = 0;
@@ -24,8 +35,10 @@ public class OverviewActivity extends AppCompatActivity implements OverviewView 
     //endregion
 
     //region Fields
+    @BindView(R.id.animator)
+    ViewAnimator mViewAnimator;
+
     private OverviewPresenter mPresenter;
-    private ViewAnimator mViewAnimator;
     private OverviewAdapter mAdapter;
     //endregion
 
@@ -41,10 +54,9 @@ public class OverviewActivity extends AppCompatActivity implements OverviewView 
         }
 
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
-        mViewAnimator = (ViewAnimator) findViewById(R.id.animator);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
@@ -68,6 +80,13 @@ public class OverviewActivity extends AppCompatActivity implements OverviewView 
     }
     //endregion
 
+    //region View Injection
+    @OnClick(R.id.floating_action_button)
+    public void onAddButtonClicked() {
+        mPresenter.onAddButtonClicked();
+    }
+    //endregion
+
     //region OverviewView interface
     @Override
     public void showEmpty() {
@@ -83,6 +102,33 @@ public class OverviewActivity extends AppCompatActivity implements OverviewView 
     public void showContent(List<TagItem> tagItems) {
         mAdapter.setupData(tagItems);
         mViewAnimator.setDisplayedChild(POSITION_LIST);
+    }
+
+    @Override
+    public Activity getActivityContext() {
+        return this;
+    }
+
+    @Override
+    public void showAddTagItemDialog(int title, View view, int buttonPositive,
+                                     DialogInterface.OnClickListener listener, int buttonNegative) {
+        new AlertDialog.Builder(this)
+                .setTitle(title)
+                .setView(view)
+                .setPositiveButton(buttonPositive, listener)
+                .setNegativeButton(buttonNegative, null)
+                .show();
+    }
+
+    @Override
+    public View getInflatedView(int layoutResource) {
+        return LayoutInflater.from(this).inflate(layoutResource,
+                (ViewGroup) findViewById(android.R.id.content), false);
+    }
+
+    @Override
+    public void showToast(int message, String tagItemValue) {
+        Toast.makeText(this, getString(message, tagItemValue), Toast.LENGTH_SHORT).show();
     }
     //endregion
 }

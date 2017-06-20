@@ -8,15 +8,15 @@ import android.widget.TextView;
 import com.oddhov.insta_randomizer.R;
 import com.oddhov.insta_randomizer.presenters.TagItemPresenter;
 
-public class TagItemViewHolder extends RecyclerView.ViewHolder implements TagItemViewHolderView {
-    private TagItemPresenter mPresenter;
+import butterknife.BindView;
 
-    private TextView tvTagItemValue;
+public class TagItemViewHolder extends RecyclerView.ViewHolder implements TagItemViewHolderView {
+    @BindView(R.id.tvTagItemValue)
+    TextView tvTagItemValue;
+    private TagItemPresenter mPresenter;
 
     public TagItemViewHolder(View itemView) {
         super(itemView);
-
-        tvTagItemValue = (TextView) itemView.findViewById(R.id.tvTagItemValue);
     }
 
     public void bindPresenter(TagItemPresenter presenter) {
