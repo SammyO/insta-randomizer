@@ -18,11 +18,17 @@ public class SharedPreferencesUtils {
     }
 
     public void addTagItemToMemory(String tagItem) {
-        Set<String> currentTagItems = new HashSet<>(getTagItemsFromMemory());
-        currentTagItems.add(tagItem.startsWith("#") ? tagItem.substring(1) : tagItem);
+        Set<String> currentTagItems = getTagItemsFromMemory();
+        Set<String> newTagItems;
+        if (currentTagItems != null) {
+            newTagItems = new HashSet<>(currentTagItems);
+        } else {
+            newTagItems = new HashSet<>();
+        }
+        newTagItems.add(tagItem.startsWith("#") ? tagItem.substring(1) : tagItem);
         sharedPreferences()
                 .edit()
-                .putStringSet(SHARED_PREFERENCES_TAG_ITEMS_NAME, currentTagItems)
+                .putStringSet(SHARED_PREFERENCES_TAG_ITEMS_NAME, newTagItems)
                 .apply();
     }
 

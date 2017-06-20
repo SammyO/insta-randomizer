@@ -47,11 +47,7 @@ public class OverviewActivity extends AppCompatActivity implements OverviewView 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (savedInstanceState == null) {
-            mPresenter = new OverviewPresenterImpl();
-        } else {
-            // TODO
-        }
+        mPresenter = new OverviewPresenterImpl();
 
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
