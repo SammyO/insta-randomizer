@@ -13,4 +13,6 @@ public interface OverviewPresenter {
     void destroy();
 
     void onAddButtonClicked();
+
+    void onRefresh();
 }

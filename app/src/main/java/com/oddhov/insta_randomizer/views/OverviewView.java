@@ -23,6 +23,8 @@ public interface OverviewView {
                               DialogInterface.OnClickListener buttonPositiveListener, int buttonNegative,
                               DialogInterface.OnClickListener buttonNegativeListener);
 
+    void setSwipeRefreshLayoutRefreshing(boolean setRefreshing);
+
     void adapterSetupData(List<TagItem> tagItems);
 
     void adapterRemoveItem(TagItem tagItem);

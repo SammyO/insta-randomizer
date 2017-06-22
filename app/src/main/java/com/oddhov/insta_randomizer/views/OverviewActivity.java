@@ -4,6 +4,7 @@ package com.oddhov.insta_randomizer.views;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -28,7 +29,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class OverviewActivity extends AppCompatActivity implements OverviewView {
+public class OverviewActivity extends AppCompatActivity implements OverviewView, SwipeRefreshLayout.OnRefreshListener {
     //region Static Fields
     private static final int POSITION_LIST = 0;
     private static final int POSITION_LOADING = 1;
@@ -38,6 +39,8 @@ public class OverviewActivity extends AppCompatActivity implements OverviewView 
     //region Fields
     @BindView(R.id.animator)
     ViewAnimator mViewAnimator;
+    @BindView(R.id.swipeRefreshLayout)
+    SwipeRefreshLayout mSwipeRefreshLayout;
 
     private OverviewPresenter mPresenter;
     private OverviewAdapter mAdapter;
@@ -78,6 +81,8 @@ public class OverviewActivity extends AppCompatActivity implements OverviewView 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        mSwipeRefreshLayout.setOnRefreshListener(this);
     }
 
     @Override
@@ -90,6 +95,13 @@ public class OverviewActivity extends AppCompatActivity implements OverviewView 
     protected void onPause() {
         super.onPause();
         mPresenter.destroy();
+    }
+    //endregion
+
+    //region SwipeRefreshLayout.OnRefreshListener
+    @Override
+    public void onRefresh() {
+        mPresenter.onRefresh();
     }
     //endregion
 
@@ -134,6 +146,11 @@ public class OverviewActivity extends AppCompatActivity implements OverviewView 
     }
 
     @Override
+    public void setSwipeRefreshLayoutRefreshing(boolean setRefreshing) {
+        mSwipeRefreshLayout.setRefreshing(setRefreshing);
+    }
+
+    @Override
     public void adapterSetupData(List<TagItem> tagItems) {
         mAdapter.setupData(tagItems);
     }
@@ -153,6 +170,5 @@ public class OverviewActivity extends AppCompatActivity implements OverviewView 
         return LayoutInflater.from(this).inflate(layoutResource,
                 (ViewGroup) findViewById(android.R.id.content), false);
     }
-
     //endregion
 }

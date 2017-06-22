@@ -26,7 +26,6 @@ public class OverviewPresenterImpl extends BasePresenter<OverviewView, List<TagI
     //region BasePresenter
     @Override
     protected void updateView() {
-        // Business logic is in the presenter
         if (mData == null || mData.size() == 0) {
             view().showEmpty();
         } else {
@@ -43,10 +42,9 @@ public class OverviewPresenterImpl extends BasePresenter<OverviewView, List<TagI
 
         this.mSharedPreferencesUtils = new SharedPreferencesUtils(view().getActivityContext());
 
-        // Only reload data  when it's not there yet
+        // Only reload data when it hasn't been set yet
         if (mData == null && !mLoadingData) {
-            view().showLoading();
-            loadData();
+            onRefresh();
         }
     }
 
@@ -83,6 +81,12 @@ public class OverviewPresenterImpl extends BasePresenter<OverviewView, List<TagI
                 R.string.add_tag_item_cancel,
                 null);
     }
+
+    @Override
+    public void onRefresh() {
+        view().showLoading();
+        loadData();
+    }
     //endregion
 
     //region DialogInterface.OnClickListener Interface
@@ -109,6 +113,9 @@ public class OverviewPresenterImpl extends BasePresenter<OverviewView, List<TagI
             }
         }
         setData(tagItems);
+        if (view() != null) {
+            view().setSwipeRefreshLayoutRefreshing(false);
+        }
     }
     //endregion
 }
