@@ -12,8 +12,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class TagItemViewHolder extends RecyclerView.ViewHolder implements TagItemViewHolderView {
-    @BindView(R.id.tvTagItemValue)
-    TextView tvTagItemValue;
+    @BindView(R.id.tvCardName)
+    TextView tvCardName;
 
     private TagItemPresenter mPresenter;
 
@@ -27,6 +27,10 @@ public class TagItemViewHolder extends RecyclerView.ViewHolder implements TagIte
         mPresenter.bindView(this);
     }
 
+    public TagItemPresenter getViewHolderPresenter() {
+        return mPresenter;
+    }
+
     public void unbindPresenter() {
         mPresenter = null;
     }
@@ -34,7 +38,7 @@ public class TagItemViewHolder extends RecyclerView.ViewHolder implements TagIte
     //region Interface TagItemViewHolderView
     @Override
     public void setTagItemValue(String tagItemValue) {
-        tvTagItemValue.setText(tagItemValue);
+        tvCardName.setText(tagItemValue);
     }
     //endregion
 }

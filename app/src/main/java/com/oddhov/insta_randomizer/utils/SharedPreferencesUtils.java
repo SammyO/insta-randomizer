@@ -32,6 +32,19 @@ public class SharedPreferencesUtils {
                 .apply();
     }
 
+    public void removeTagItemToMemory(String tagItem) {
+        Set<String> currentTagItems = getTagItemsFromMemory();
+        Set<String> newTagItems;
+        if (currentTagItems != null) {
+            newTagItems = new HashSet<>(currentTagItems);
+            newTagItems.remove(tagItem);
+            sharedPreferences()
+                    .edit()
+                    .putStringSet(SHARED_PREFERENCES_TAG_ITEMS_NAME, newTagItems)
+                    .apply();
+        }
+    }
+
     public Set<String> getTagItemsFromMemory() {
         return sharedPreferences().getStringSet(SHARED_PREFERENCES_TAG_ITEMS_NAME, null);
     }

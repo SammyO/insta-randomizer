@@ -9,4 +9,8 @@ public class TagItemPresenter extends BasePresenter<TagItemViewHolderView, TagIt
     protected void updateView() {
         view().setTagItemValue(mData.getTagValue());
     }
+
+    public TagItem getData() {
+        return mData;
+    }
 }

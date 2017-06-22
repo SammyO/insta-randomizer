@@ -27,7 +27,7 @@ public class OverviewAdapter extends RecyclerView.Adapter<TagItemViewHolder> {
     }
     //endregion
 
-    //region Setup Methods
+    //region Set Data Methods
     public void setupData(List<TagItem> tagItems) {
         mTagItems.clear();
         mTagItemPresenters.clear();
@@ -38,6 +38,32 @@ public class OverviewAdapter extends RecyclerView.Adapter<TagItemViewHolder> {
         }
 
         notifyDataSetChanged();
+    }
+
+    public void removeItem(TagItem tagItem) {
+        int position = getItemPosition(tagItem);
+        if (position >= 0) {
+            mTagItems.remove(tagItem);
+        }
+        mTagItemPresenters.remove(tagItem.getId());
+
+        if (position >= 0) {
+            notifyItemRemoved(position);
+        }
+    }
+
+    private int getItemPosition(TagItem tagItem) {
+        Object modelId = tagItem.getId();
+
+        int position = -1;
+        for (int i = 0; i < mTagItems.size(); i++) {
+            TagItem tagItem1 = mTagItems.get(i);
+            if (tagItem1.getId().equals(modelId)) {
+                position = i;
+                break;
+            }
+        }
+        return position;
     }
     //endregion
 
@@ -51,8 +77,6 @@ public class OverviewAdapter extends RecyclerView.Adapter<TagItemViewHolder> {
 
     @Override
     public boolean onFailedToRecycleView(TagItemViewHolder holder) {
-        // Sometimes, if animations are running on the itemView's children, the RecyclerView won't
-        // be able to recycle the view. We should still unbind the presenter.
         holder.unbindPresenter();
 
         return super.onFailedToRecycleView(holder);
@@ -85,7 +109,6 @@ public class OverviewAdapter extends RecyclerView.Adapter<TagItemViewHolder> {
     }
 
     private TagItemPresenter getTagItemPresenter(TagItem tagItem) {
-        Log.e("OverviewAdapter", "Getting presenter for item " + tagItem.getId());
         return mTagItemPresenters.get(tagItem.getId());
     }
 

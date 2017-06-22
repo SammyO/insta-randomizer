@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,6 +56,22 @@ public class OverviewActivity extends AppCompatActivity implements OverviewView 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback =
+                new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+                    @Override
+                    public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
+                                          RecyclerView.ViewHolder target) {
+                        return false;
+                    }
+
+                    @Override
+                    public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                        mPresenter.onItemSwiped(viewHolder);
+                    }
+                };
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
 
         mAdapter = new OverviewAdapter();
         recyclerView.setAdapter(mAdapter);
@@ -95,9 +112,35 @@ public class OverviewActivity extends AppCompatActivity implements OverviewView 
     }
 
     @Override
-    public void showContent(List<TagItem> tagItems) {
-        mAdapter.setupData(tagItems);
+    public void showContent() {
         mViewAnimator.setDisplayedChild(POSITION_LIST);
+    }
+
+    @Override
+    public void showToast(int message, String tagItemValue) {
+        Toast.makeText(this, getString(message, tagItemValue), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showAddTagItemDialog(int title, View view, int buttonPositive,
+                                     DialogInterface.OnClickListener buttonPositiveListener, int buttonNegative,
+                                     DialogInterface.OnClickListener buttonNegativeListener) {
+        new AlertDialog.Builder(this)
+                .setTitle(title)
+                .setView(view)
+                .setPositiveButton(buttonPositive, buttonPositiveListener)
+                .setNegativeButton(buttonNegative, buttonNegativeListener)
+                .show();
+    }
+
+    @Override
+    public void adapterSetupData(List<TagItem> tagItems) {
+        mAdapter.setupData(tagItems);
+    }
+
+    @Override
+    public void adapterRemoveItem(TagItem tagItem) {
+        mAdapter.removeItem(tagItem);
     }
 
     @Override
@@ -106,25 +149,10 @@ public class OverviewActivity extends AppCompatActivity implements OverviewView 
     }
 
     @Override
-    public void showAddTagItemDialog(int title, View view, int buttonPositive,
-                                     DialogInterface.OnClickListener listener, int buttonNegative) {
-        new AlertDialog.Builder(this)
-                .setTitle(title)
-                .setView(view)
-                .setPositiveButton(buttonPositive, listener)
-                .setNegativeButton(buttonNegative, null)
-                .show();
-    }
-
-    @Override
     public View getInflatedView(int layoutResource) {
         return LayoutInflater.from(this).inflate(layoutResource,
                 (ViewGroup) findViewById(android.R.id.content), false);
     }
 
-    @Override
-    public void showToast(int message, String tagItemValue) {
-        Toast.makeText(this, getString(message, tagItemValue), Toast.LENGTH_SHORT).show();
-    }
     //endregion
 }

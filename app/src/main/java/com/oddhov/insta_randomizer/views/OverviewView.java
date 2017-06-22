@@ -15,12 +15,17 @@ public interface OverviewView {
 
     void showLoading();
 
-    void showContent(List<TagItem> tagItems);
+    void showContent();
 
     Activity getActivityContext();
 
     void showAddTagItemDialog(int title, View view, int buttonPositive,
-                              DialogInterface.OnClickListener listener, int buttonNegative);
+                              DialogInterface.OnClickListener buttonPositiveListener, int buttonNegative,
+                              DialogInterface.OnClickListener buttonNegativeListener);
+
+    void adapterSetupData(List<TagItem> tagItems);
+
+    void adapterRemoveItem(TagItem tagItem);
 
     View getInflatedView(int layoutResource);
 
