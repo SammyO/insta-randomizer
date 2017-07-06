@@ -1,6 +1,7 @@
 package com.oddhov.insta_randomizer.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,12 @@ public class OverviewAdapter extends RecyclerView.Adapter<TagItemViewHolder> {
             mTagItems.add(tagItem);
             mTagItemPresenters.put(tagItem.getId(), createTagItemPresenter(tagItem));
         }
+
+        notifyDataSetChanged();
+    }
+
+    public void addItem(TagItem tagItem) {
+        mTagItems.add(tagItem);
 
         notifyDataSetChanged();
     }
@@ -92,6 +99,7 @@ public class OverviewAdapter extends RecyclerView.Adapter<TagItemViewHolder> {
 
     @Override
     public void onBindViewHolder(TagItemViewHolder holder, int position) {
+        Log.e("OverviewAdapter", "onBindViewHolder for: " + mTagItems.get(position).getTagValue());
         holder.bindPresenter(getTagItemPresenter(mTagItems.get(position)));
     }
 

@@ -25,6 +25,8 @@ public interface OverviewView {
 
     void setSwipeRefreshLayoutRefreshing(boolean setRefreshing);
 
+    void adapterAddItem(TagItem tagItem);
+
     void adapterSetupData(List<TagItem> tagItems);
 
     void adapterRemoveItem(TagItem tagItem);

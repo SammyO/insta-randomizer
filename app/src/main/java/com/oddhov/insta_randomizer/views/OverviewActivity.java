@@ -156,6 +156,11 @@ public class OverviewActivity extends AppCompatActivity implements OverviewView,
     }
 
     @Override
+    public void adapterAddItem(TagItem tagItem) {
+        mAdapter.addItem(tagItem);
+    }
+
+    @Override
     public void adapterRemoveItem(TagItem tagItem) {
         mAdapter.removeItem(tagItem);
     }
