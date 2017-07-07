@@ -43,6 +43,7 @@ public class OverviewAdapter extends RecyclerView.Adapter<TagItemViewHolder> {
 
     public void addItem(TagItem tagItem) {
         mTagItems.add(tagItem);
+        mTagItemPresenters.put(tagItem.getId(), createTagItemPresenter(tagItem));
 
         notifyDataSetChanged();
     }
