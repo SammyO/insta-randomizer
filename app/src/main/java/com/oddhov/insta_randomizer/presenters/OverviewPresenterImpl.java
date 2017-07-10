@@ -3,13 +3,10 @@ package com.oddhov.insta_randomizer.presenters;
 import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
 import com.oddhov.insta_randomizer.R;
-import com.oddhov.insta_randomizer.api.ImagesService;
-import com.oddhov.insta_randomizer.models.Image;
 import com.oddhov.insta_randomizer.models.TagItem;
 import com.oddhov.insta_randomizer.utils.SharedPreferencesUtils;
 import com.oddhov.insta_randomizer.views.OverviewView;
@@ -20,14 +17,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
-
 
 public class OverviewPresenterImpl extends BasePresenter<OverviewView, List<TagItem>> implements OverviewPresenter, DialogInterface.OnClickListener {
-    private ImagesService mImagesService;
     private SharedPreferencesUtils mSharedPreferencesUtils;
-    private Observer<Image> mDisposableObserver;
     private EditText mTagItemInput;
 
     private boolean mLoadingData = false;
@@ -49,7 +41,6 @@ public class OverviewPresenterImpl extends BasePresenter<OverviewView, List<TagI
     public void setup(@NonNull OverviewView view) {
         super.bindView(view);
 
-        this.mImagesService = new ImagesService();
         this.mSharedPreferencesUtils = new SharedPreferencesUtils(view().getActivityContext());
 
         // Only reload data when it hasn't been set yet
@@ -72,7 +63,6 @@ public class OverviewPresenterImpl extends BasePresenter<OverviewView, List<TagI
     @Override
     public void destroy() {
         super.unbindView();
-        // TODO dispose observer
     }
 
     @Override
@@ -98,7 +88,6 @@ public class OverviewPresenterImpl extends BasePresenter<OverviewView, List<TagI
         if (view() != null) {
             view().showLoading();
             loadDataFromMemory();
-            loadDataFromApi();
         }
     }
     //endregion
@@ -111,6 +100,7 @@ public class OverviewPresenterImpl extends BasePresenter<OverviewView, List<TagI
             if (view() != null) {
                 view().showToast(R.string.added_tag_item_message, mTagItemInput.getText().toString());
                 view().adapterAddItem(new TagItem(UUID.randomUUID().toString(), mTagItemInput.getText().toString()));
+                loadDataFromMemory();
             }
         }
     }
@@ -129,33 +119,6 @@ public class OverviewPresenterImpl extends BasePresenter<OverviewView, List<TagI
         if (view() != null) {
             view().setSwipeRefreshLayoutRefreshing(false);
         }
-    }
-
-    private void loadDataFromApi() {
-        mDisposableObserver = new Observer<Image>() {
-
-            @Override
-            public void onSubscribe(Disposable d) {
-
-            }
-
-            @Override
-            public void onNext(Image image) {
-                Log.e("OverviewPresenter", "onNext images size: " + image.getTitle());
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-        };
-
-        mImagesService.getImageForQuery(mDisposableObserver, "laptop");
     }
     //endregion
 }

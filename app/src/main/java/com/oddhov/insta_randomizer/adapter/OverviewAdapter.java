@@ -42,6 +42,7 @@ public class OverviewAdapter extends RecyclerView.Adapter<TagItemViewHolder> {
     }
 
     public void addItem(TagItem tagItem) {
+        Log.e("OverviewAdapter", "addItem()");
         mTagItems.add(tagItem);
         mTagItemPresenters.put(tagItem.getId(), createTagItemPresenter(tagItem));
 

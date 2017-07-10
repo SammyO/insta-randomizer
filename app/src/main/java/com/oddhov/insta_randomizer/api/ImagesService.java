@@ -1,9 +1,12 @@
 package com.oddhov.insta_randomizer.api;
 
 
+import android.util.Log;
+
 import com.oddhov.insta_randomizer.models.Image;
 import com.oddhov.insta_randomizer.models.Images;
 
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -51,7 +54,8 @@ public class ImagesService {
 
                     @Override
                     public Observable<Image> apply(@NonNull Images images) throws Exception {
-                        return Observable.just(images.getImages().get(0));
+                        Log.e("ImagesService", "length of images: " + images.getImages().size());
+                        return Observable.just(images.getImages().get(new Random().nextInt(images.getImages().size() + 1)));
                     }
                 })
                 .subscribeOn(Schedulers.io())
