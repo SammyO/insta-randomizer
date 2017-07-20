@@ -63,6 +63,7 @@ public class OverviewPresenterImpl extends BasePresenter<OverviewView, List<TagI
         if (view() != null) {
             view().adapterRemoveItem(tagItemViewHolder.getViewHolderPresenter().getData());
         }
+        loadDataFromMemory();
     }
 
     @Override
@@ -94,7 +95,6 @@ public class OverviewPresenterImpl extends BasePresenter<OverviewView, List<TagI
         if (view() != null) {
             view().showLoading();
             loadDataFromMemory();
-            loadDataFromApi();
         }
     }
     //endregion
@@ -103,12 +103,7 @@ public class OverviewPresenterImpl extends BasePresenter<OverviewView, List<TagI
     @Override
     public void onClick(DialogInterface dialog, int which) {
         if (which == DialogInterface.BUTTON_POSITIVE) {
-            TagItem newTagItem = new TagItem(UUID.randomUUID().toString(), mTagItemInput.getText().toString());
-            mDatabaseUtils.addTagItem(newTagItem);
-            if (view() != null) {
-                view().showToast(R.string.added_tag_item_message, mTagItemInput.getText().toString());
-                view().adapterAddItem(newTagItem);
-            }
+            loadDataFromApi();
         }
     }
     //endregion
@@ -134,6 +129,18 @@ public class OverviewPresenterImpl extends BasePresenter<OverviewView, List<TagI
 
             @Override
             public void onNext(Image image) {
+                TagItem newTagItem = new TagItem(
+                        UUID.randomUUID().toString(),
+                        mTagItemInput.getText().toString(),
+                        image.getDisplaySizes().get(0).getUri());
+                mDatabaseUtils.addTagItem(newTagItem);
+
+                if (view() != null) {
+                    view().showToast(R.string.added_tag_item_message, mTagItemInput.getText().toString());
+                    view().adapterAddItem(newTagItem);
+                }
+
+                loadDataFromMemory();
             }
 
             @Override
