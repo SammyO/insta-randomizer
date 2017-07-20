@@ -1,9 +1,14 @@
 package com.oddhov.insta_randomizer.models;
 
 
-public class TagItem {
+import io.realm.RealmObject;
+
+public class TagItem extends RealmObject {
     private String mId;
     private String mTagValue;
+
+    public TagItem() {
+    }
 
     public TagItem(String id, String tagValue) {
         this.mId = id;

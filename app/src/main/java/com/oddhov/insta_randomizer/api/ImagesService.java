@@ -1,8 +1,6 @@
 package com.oddhov.insta_randomizer.api;
 
 
-import android.util.Log;
-
 import com.oddhov.insta_randomizer.models.Image;
 import com.oddhov.insta_randomizer.models.Images;
 
@@ -54,7 +52,6 @@ public class ImagesService {
 
                     @Override
                     public Observable<Image> apply(@NonNull Images images) throws Exception {
-                        Log.e("ImagesService", "length of images: " + images.getImages().size());
                         return Observable.just(images.getImages().get(new Random().nextInt(images.getImages().size() + 1)));
                     }
                 })

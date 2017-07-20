@@ -3,7 +3,6 @@ package com.oddhov.insta_randomizer.presenters;
 import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -11,13 +10,11 @@ import com.oddhov.insta_randomizer.R;
 import com.oddhov.insta_randomizer.api.ImagesService;
 import com.oddhov.insta_randomizer.models.Image;
 import com.oddhov.insta_randomizer.models.TagItem;
-import com.oddhov.insta_randomizer.utils.SharedPreferencesUtils;
+import com.oddhov.insta_randomizer.utils.DatabaseUtils;
 import com.oddhov.insta_randomizer.views.OverviewView;
 import com.oddhov.insta_randomizer.views.TagItemViewHolder;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import io.reactivex.Observer;
@@ -26,7 +23,7 @@ import io.reactivex.disposables.Disposable;
 
 public class OverviewPresenterImpl extends BasePresenter<OverviewView, List<TagItem>> implements OverviewPresenter, DialogInterface.OnClickListener {
     private ImagesService mImagesService;
-    private SharedPreferencesUtils mSharedPreferencesUtils;
+    private DatabaseUtils mDatabaseUtils;
     private Observer<Image> mDisposableObserver;
     private EditText mTagItemInput;
 
@@ -50,7 +47,7 @@ public class OverviewPresenterImpl extends BasePresenter<OverviewView, List<TagI
         super.bindView(view);
 
         this.mImagesService = new ImagesService();
-        this.mSharedPreferencesUtils = new SharedPreferencesUtils(view().getActivityContext());
+        this.mDatabaseUtils = new DatabaseUtils(view().getActivityContext());
 
         // Only reload data when it hasn't been set yet
         if (mData == null && !mLoadingData) {
@@ -61,8 +58,7 @@ public class OverviewPresenterImpl extends BasePresenter<OverviewView, List<TagI
     @Override
     public void onItemSwiped(RecyclerView.ViewHolder viewHolder) {
         TagItemViewHolder tagItemViewHolder = (TagItemViewHolder) viewHolder;
-        mSharedPreferencesUtils.removeTagItemToMemory(
-                tagItemViewHolder.getViewHolderPresenter().getData().getTagValue());
+        mDatabaseUtils.deleteTagItem(tagItemViewHolder.getViewHolderPresenter().getData());
 
         if (view() != null) {
             view().adapterRemoveItem(tagItemViewHolder.getViewHolderPresenter().getData());
@@ -107,10 +103,11 @@ public class OverviewPresenterImpl extends BasePresenter<OverviewView, List<TagI
     @Override
     public void onClick(DialogInterface dialog, int which) {
         if (which == DialogInterface.BUTTON_POSITIVE) {
-            mSharedPreferencesUtils.addTagItemToMemory(mTagItemInput.getText().toString());
+            TagItem newTagItem = new TagItem(UUID.randomUUID().toString(), mTagItemInput.getText().toString());
+            mDatabaseUtils.addTagItem(newTagItem);
             if (view() != null) {
                 view().showToast(R.string.added_tag_item_message, mTagItemInput.getText().toString());
-                view().adapterAddItem(new TagItem(UUID.randomUUID().toString(), mTagItemInput.getText().toString()));
+                view().adapterAddItem(newTagItem);
             }
         }
     }
@@ -118,14 +115,10 @@ public class OverviewPresenterImpl extends BasePresenter<OverviewView, List<TagI
 
     //region Helper Methods
     private void loadDataFromMemory() {
-        List<TagItem> tagItems = new ArrayList<>();
-        Set<String> storedTagItemStrings = mSharedPreferencesUtils.getTagItemsFromMemory();
-        if (storedTagItemStrings != null) {
-            for (String storedTagItem : storedTagItemStrings) {
-                tagItems.add(new TagItem(UUID.randomUUID().toString(), storedTagItem));
-            }
+        List<TagItem> storedTagItems = mDatabaseUtils.getTagItems();
+        if (storedTagItems != null) {
+            setData(storedTagItems);
         }
-        setData(tagItems);
         if (view() != null) {
             view().setSwipeRefreshLayoutRefreshing(false);
         }
@@ -141,7 +134,6 @@ public class OverviewPresenterImpl extends BasePresenter<OverviewView, List<TagI
 
             @Override
             public void onNext(Image image) {
-                Log.e("OverviewPresenter", "onNext images size: " + image.getTitle());
             }
 
             @Override
