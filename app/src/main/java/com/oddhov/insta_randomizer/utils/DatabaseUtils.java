@@ -54,7 +54,8 @@ public class DatabaseUtils {
     public void deleteTagItem(TagItem tagItem) {
         mRealm = Realm.getDefaultInstance();
         final UserData userData = getUserData();
-        mRealm.executeTransaction(realm -> userData.deleteTagItem(tagItem));
+        mRealm.executeTransaction(realm ->
+                userData.deleteTagItem(tagItem));
         closeRealm();
     }
 

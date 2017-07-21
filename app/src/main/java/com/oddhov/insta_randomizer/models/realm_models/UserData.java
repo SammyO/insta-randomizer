@@ -2,6 +2,8 @@ package com.oddhov.insta_randomizer.models.realm_models;
 
 import com.oddhov.insta_randomizer.models.TagItem;
 
+import java.util.Iterator;
+
 import io.realm.RealmList;
 import io.realm.RealmObject;
 
@@ -19,7 +21,15 @@ public class UserData extends RealmObject {
         mTagItems.add(tagItem);
     }
 
-    public void deleteTagItem(TagItem tagItem) {
-        mTagItems.remove(tagItem);
+    public boolean deleteTagItem(TagItem tagItem) {
+        Iterator<TagItem> it = mTagItems.iterator();
+        while (it.hasNext()) {
+            TagItem next = it.next();
+            if (next.getId().equals(tagItem.getId())) {
+                it.remove();
+                return true;
+            }
+        }
+        return false;
     }
 }

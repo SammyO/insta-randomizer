@@ -51,7 +51,6 @@ public class TagItemViewHolder extends RecyclerView.ViewHolder implements TagIte
     public void setTagItemImage(String url) {
         Picasso.with(mItemView.getContext())
                 .load(url)
-                .centerCrop()
                 .into(mIvCardThumbnail);
     }
     //endregion

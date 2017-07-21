@@ -63,7 +63,7 @@ public class OverviewPresenterImpl extends BasePresenter<OverviewView, List<TagI
         if (view() != null) {
             view().adapterRemoveItem(tagItemViewHolder.getViewHolderPresenter().getData());
         }
-        loadDataFromMemory();
+        setData(mDatabaseUtils.getTagItems());
     }
 
     @Override
@@ -103,7 +103,7 @@ public class OverviewPresenterImpl extends BasePresenter<OverviewView, List<TagI
     @Override
     public void onClick(DialogInterface dialog, int which) {
         if (which == DialogInterface.BUTTON_POSITIVE) {
-            loadDataFromApi();
+            loadDataFromApi(mTagItemInput.getText().toString());
         }
     }
     //endregion
@@ -119,7 +119,7 @@ public class OverviewPresenterImpl extends BasePresenter<OverviewView, List<TagI
         }
     }
 
-    private void loadDataFromApi() {
+    private void loadDataFromApi(String tagValue) {
         mDisposableObserver = new Observer<Image>() {
 
             @Override
@@ -154,7 +154,7 @@ public class OverviewPresenterImpl extends BasePresenter<OverviewView, List<TagI
             }
         };
 
-        mImagesService.getImageForQuery(mDisposableObserver, "laptop");
+        mImagesService.getImageForQuery(mDisposableObserver, tagValue);
     }
     //endregion
 }

@@ -8,6 +8,7 @@ public class TagItemPresenter extends BasePresenter<TagItemViewHolderView, TagIt
     @Override
     protected void updateView() {
         view().setTagItemValue(mData.getTagValue());
+        view().setTagItemImage(mData.getUrl());
     }
 
     public TagItem getData() {

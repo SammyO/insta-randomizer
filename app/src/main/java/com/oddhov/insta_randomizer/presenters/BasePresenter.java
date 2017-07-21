@@ -13,9 +13,7 @@ public abstract class BasePresenter<V, M> {
 
     public void bindView(@NonNull V view) {
         mView = new WeakReference<>(view);
-        if (setupDone()) {
-            updateView();
-        }
+        refreshView();
     }
 
     public void unbindView() {
@@ -40,6 +38,12 @@ public abstract class BasePresenter<V, M> {
 
     protected boolean setupDone() {
         return view() != null && mData != null;
+    }
+
+    protected void refreshView() {
+        if (setupDone()) {
+            updateView();
+        }
     }
 
     //endregion
